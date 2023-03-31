@@ -4,7 +4,7 @@
     "dataset" : "wikipedia_09_gpt2",
     "dataset_version" : "full",
     "train_batch_size" : 4,
-    "model" : "gpt2-large",
+    "model" : "gpt2",
     "method": "recadam",
     "ngpu" : 1,
     "num_workers" : 40,

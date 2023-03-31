@@ -8,11 +8,12 @@ from evaluation_ppl import evaluate_ppl
 import numpy as np
 import torch
 import pytorch_lightning as pl
-from pytorch_lightning.loggers import WandbLogger
-from transformers import T5Tokenizer, GPT2Tokenizer
+# from pytorch_lightning.loggers import WandbLogger
+# from transformers import T5Tokenizer, GPT2Tokenizer
 from models import load_model
 
 from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
+
 
 def set_seed(seed):
     random.seed(seed)
@@ -21,6 +22,7 @@ def set_seed(seed):
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
 
+
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--config', default=None, type=str)
@@ -28,16 +30,16 @@ if __name__ == '__main__':
     if arg_.config == None:
         raise NameError("Include a config file in the argument please.")
 
-    #Getting configurations
+    # Getting configurations
     with open(arg_.config) as config_file:
         hparam = json.load(config_file)
     hparam = argparse.Namespace(**hparam)
 
-    #Setting GPUs to use
-    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-    os.environ["CUDA_VISIBLE_DEVICES"]=hparam.CUDA_VISIBLE_DEVICES
+    # Setting GPUs to use
+    os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+    os.environ["CUDA_VISIBLE_DEVICES"] = hparam.CUDA_VISIBLE_DEVICES
 
-    #Init configs that are not given
+    # Init configs that are not given
     if 'grad_norm' not in hparam:
         hparam.grad_norm = 0.1
     if 'weight_decay' not in hparam:
@@ -65,24 +67,25 @@ if __name__ == '__main__':
     if 'accelerator' not in hparam:
         hparam.accelerator = None
     if 'checkpoint_path' not in hparam:
-        hparam.checkpoint_path =''
+        hparam.checkpoint_path = ''
     if 'resume_from_checkpoint' not in hparam:
         hparam.resume_from_checkpoint = None
     if 'fp16' not in hparam:
         hparam.fp16 = False
 
-    #Logging into WANDB if needed
+    # Logging into WANDB if needed
     if hparam.wandb_log:
-        wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name, entity="lklab_kaist")
+        # wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name, entity="lklab_kaist")
+        wandb_logger = None
     else:
         wandb_logger = None
-        
-    #Setting configurations
+
+    # Setting configurations
     args_dict = dict(
-        output_dir=hparam.output_dir, # Path to save the checkpoints
+        output_dir=hparam.output_dir,  # Path to save the checkpoints
         dataset=hparam.dataset,
-        dataset_version = hparam.dataset_version,
-        len_data = hparam.len_data,
+        dataset_version=hparam.dataset_version,
+        len_data=hparam.len_data,
         model_name_or_path=hparam.model,
         method=hparam.method,
         mode=hparam.mode,
@@ -99,12 +102,14 @@ if __name__ == '__main__':
         gradient_accumulation_steps=hparam.gradient_accumulation_steps,
         n_gpu=hparam.ngpu,
         num_workers=hparam.num_workers,
-        resume_from_checkpoint=hparam.resume_from_checkpoint, 
-        use_lr_scheduling = hparam.use_lr_scheduling,
-        val_check_interval = 0.01,
+        resume_from_checkpoint=hparam.resume_from_checkpoint,
+        use_lr_scheduling=hparam.use_lr_scheduling,
+        val_check_interval=0.01,
         fp16=hparam.fp16,
-        opt_level='O1', # you can find out more on optimisation levels here https://nvidia.github.io/apex/amp.html#opt-levels-and-properties
-        max_grad_norm=hparam.grad_norm, # if you enable 16-bit training then set this to a sensible value, 0.5 is a good default
+        opt_level='O1',
+        # you can find out more on optimisation levels here https://nvidia.github.io/apex/amp.html#opt-levels-and-properties
+        max_grad_norm=hparam.grad_norm,
+        # if you enable 16-bit training then set this to a sensible value, 0.5 is a good default
         seed=42,
         check_validation_only=hparam.check_validation,
         checkpoint_path=hparam.checkpoint_path,
@@ -113,49 +118,48 @@ if __name__ == '__main__':
     )
     args = argparse.Namespace(**args_dict)
 
-    #Setting different val & checkpoint saving config for mode
-    if args.mode=='pretrain_brute':
-        saving_epoch = 1
-    else:
-        saving_epoch = 1
+    # Setting different val & checkpoint saving config for mode
+    # if args.mode=='pretrain_brute':
+    #     saving_epoch = 1
+    # else:
+    #     saving_epoch = 1
+    saving_epoch = 1
 
     # Defining how to save model checkpoints during training. Details: https://pytorch-lightning.readthedocs.io/en/stable/api/pytorch_lightning.callbacks.model_checkpoint.html 
-    callbacks = [ModelCheckpoint(dirpath = args.output_dir, every_n_epochs=saving_epoch,save_top_k=-1)]
+    callbacks = [ModelCheckpoint(dirpath=args.output_dir, every_n_epochs=saving_epoch, save_top_k=-1)]
     checkpoint_callback = True
 
-    if args.output_dir=="":
-        checkpoint_callback = False # Do not save model checkpoints when output dir is empty
-        callbacks=[]
+    if args.output_dir == "":
+        checkpoint_callback = False  # Do not save model checkpoints when output dir is empty
+        callbacks = []
 
     # Logging Learning Rate Scheduling
     if args.use_lr_scheduling and hparam.wandb_log:
         callbacks.append(pl.callbacks.LearningRateMonitor())
 
-    
-
     # Setting Flags for pytorch lightning trainer. Details: https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html#trainer-flags
     train_params = dict(
-        accumulate_grad_batches = args.gradient_accumulation_steps,
-        gpus = args.n_gpu,
-        max_epochs =int(args.num_train_epochs * args.num_files),
-        precision = 16 if args.fp16 else 32,
-        amp_backend = "native",
-        resume_from_checkpoint = args.resume_from_checkpoint,
-        gradient_clip_val = args.max_grad_norm,
-        enable_checkpointing = checkpoint_callback,
-        #check_val_every_n_epoch = saving_epoch,
-        val_check_interval = args.val_check_interval,
-        logger = wandb_logger,
-        callbacks = callbacks,
-        strategy = args.accelerator
+        accumulate_grad_batches=args.gradient_accumulation_steps,
+        num_nodes=args.n_gpu,
+        max_epochs=int(args.num_train_epochs * args.num_files),
+        precision=16 if args.fp16 else 32,
+        # amp_backend = "native",
+        # resume_from_checkpoint = args.resume_from_checkpoint,
+        gradient_clip_val=args.max_grad_norm,
+        enable_checkpointing=checkpoint_callback,
+        # check_val_every_n_epoch = saving_epoch,
+        val_check_interval=args.val_check_interval,
+        logger=wandb_logger,
+        callbacks=callbacks,
+        strategy=args.accelerator
     )
     if 't5' in args.model_name_or_path:
         Model = load_model('T5')
-    elif 'gpt2' in args.model_name_or_path: 
+    elif 'gpt2' in args.model_name_or_path:
         Model = load_model('GPT2')
     else:
         raise Exception('currently not supporting given model')
-    
+
     if args.check_validation_only:
         if 'evaluate_ppl' in args.mode:
             evaluate_ppl(args, Model)
@@ -163,9 +167,10 @@ if __name__ == '__main__':
             evaluate(args, Model)
     else:
         set_seed(40)
-        if args.checkpoint_path!="":
-            model = Model.load_from_checkpoint(checkpoint_path=args.checkpoint_path, hparams=args, strict=False) 
+        if args.checkpoint_path != "":
+            model = Model.load_from_checkpoint(checkpoint_path=args.checkpoint_path, hparams=args, strict=False)
         else:
             model = Model(args)
+        # print(**train_params)
         trainer = pl.Trainer(**train_params)
-        trainer.fit(model)
+        trainer.fit(model, ckpt_path=args.resume_from_checkpoint)

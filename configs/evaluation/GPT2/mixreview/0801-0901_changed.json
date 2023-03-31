@@ -4,7 +4,7 @@
     "dataset" : "0801-0901_changed",
     "dataset_version" : "full",
     "train_batch_size" : 32,
-    "model" : "gpt2-large",
+    "model" : "gpt2",
     "method": "mixreview",
     "ngpu" : 1,
     "num_workers" : 40,

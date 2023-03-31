@@ -7,7 +7,7 @@
     "dataset_version" : "full",
     "train_batch_size" : 8,
     "learning_rate" : 1e-4,
-    "model" : "gpt2-large",
+    "model" : "gpt2",
     "method": "kadapter",
     "gradient_accumulation_steps" : 1,
     "ngpu" : 8,
