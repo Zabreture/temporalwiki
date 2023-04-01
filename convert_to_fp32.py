@@ -1,4 +1,4 @@
-from pytorch_lightning.utilities.deepspeed import convert_zero_checkpoint_to_fp32_state_dict
+from lightning.pytorch.utilities.deepspeed import convert_zero_checkpoint_to_fp32_state_dict
 import os
 # lightning deepspeed has saved a directory instead of a file
 

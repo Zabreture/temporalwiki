@@ -14,7 +14,7 @@
     "CUDA_VISIBLE_DEVICES" : "0",
     "check_validation" : false,
     "wandb_log": false,
-    "wandb_project": "test1",
+    "wandb_project": "icdcs23-poster",
     "wandb_run_name" : "GPT2_large_09_subset_light_updated",
     "mode" : "finetune",
     "checkpoint_path" : "model_checkpoints/09/GPT2_diffcl",

@@ -1,21 +1,20 @@
 import os
 import json
-import time
+# import time
 import torch
 import random
 import argparse
 import numpy as np
-import wandb
+# import wandb
 
 from models import load_model
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 from evaluation import evaluate
 from argparse import ArgumentParser
 from evaluation_ppl import evaluate_ppl
-# from pytorch_lightning.loggers import WandbLogger
+from lightning.pytorch.loggers.wandb import WandbLogger
 # from transformers import T5Tokenizer, GPT2Tokenizer
-from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
-
+from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
 
 
 def set_seed(seed):
@@ -30,7 +29,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--config', default=None, type=str)
     arg_ = parser.parse_args()
-    if arg_.config == None:
+    if arg_.config is None:
         raise NameError("Include a config file in the argument please.")
 
     # Getting configurations
@@ -78,8 +77,8 @@ if __name__ == '__main__':
 
     # Logging into WANDB if needed
     if hparam.wandb_log:
-        # wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name, entity="nwpu")
-        wandb_logger = None
+        wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name)
+        # wandb_logger = None
     else:
         wandb_logger = None
 
@@ -126,7 +125,7 @@ if __name__ == '__main__':
     saving_epoch = 1
 
     # Defining how to save model checkpoints during training. Details:
-    # https://pytorch-lightning.readthedocs.io/en/stable/api/pytorch_lightning.callbacks.model_checkpoint.html
+    # https://pytorch-lightning.readthedocs.io/en/stable/api/lightning.pytorch.callbacks.model_checkpoint.html
     callbacks = [ModelCheckpoint(dirpath=args.output_dir, every_n_epochs=saving_epoch, save_top_k=-1)]
     checkpoint_callback = True
 

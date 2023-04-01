@@ -1,4 +1,4 @@
-import pytorch_lightning as pl
+import lightning.pytorch as pl
 
 from transformers import (
     Adafactor,
@@ -14,14 +14,9 @@ from collections import Counter
 
 import re
 import string
-from deepspeed.runtime.lr_schedules import WarmupDecayLR
-# import deepspeed
-# import math
+from fix.lr_schedules  import WarmupDecayLR
 import os
-# import csv
 
-from models.GPT2_Model_Kadapter import GPT2LMHeadModel as GPT2_Kadapter
-from models.GPT2_Model_LoRA import GPT2LMHeadModel as GPT2_Lora
 from models.RecAdam import RecAdam
 
 
@@ -44,22 +39,8 @@ class GPT2(pl.LightningModule):
 
         self.model = GPT2LMHeadModel.from_pretrained(hparams.model_name_or_path)
         self.save_hyperparameters(hparams)
-        if hparams.method == 'baseline' or hparams.method == 'mixreview':
+        if hparams.method == 'baseline':
             self.model = GPT2LMHeadModel.from_pretrained(hparams.model_name_or_path)
-        elif hparams.method == 'kadapter':
-            self.model = GPT2_Kadapter.from_pretrained(hparams.model_name_or_path)
-            if hparams.mode != 'finetune':
-                self.freeze_params(self.model)
-                for name, param in self.model.named_parameters():
-                    if 'kadapter' in name or 'lm_head' in name:
-                        param.requires_grad = True
-        elif hparams.method == 'lora':
-            self.model = GPT2_Lora.from_pretrained(hparams.model_name_or_path)
-            if hparams.mode != 'finetune':
-                self.freeze_params(self.model)
-                for name, param in self.model.named_parameters():
-                    if 'lora' in name or 'lm_head' in name:
-                        param.requires_grad = True
         elif hparams.method == 'recadam':
             self.model = GPT2LMHeadModel.from_pretrained(hparams.model_name_or_path)
             self.pretrained_model = GPT2LMHeadModel.from_pretrained(hparams.model_name_or_path)
@@ -346,12 +327,6 @@ class GPT2(pl.LightningModule):
                 },
             ]
 
-            # if self.hparams.accelerator is not None:
-            #     optimizer = deepspeed.ops.adam.FusedAdam(optimizer_grouped_parameters, lr=self.hparams.learning_rate,
-            #                                              weight_decay=self.hparams.weight_decay)
-            # else:
-            #     optimizer = Adafactor(optimizer_grouped_parameters, lr=self.hparams.learning_rate,
-            #                           scale_parameter=False, relative_step=False)
             optimizer = Adafactor(optimizer_grouped_parameters, lr=self.hparams.learning_rate,
                                   scale_parameter=False, relative_step=False)
 

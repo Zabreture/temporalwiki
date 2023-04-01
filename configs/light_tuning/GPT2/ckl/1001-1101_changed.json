@@ -14,7 +14,7 @@
     "CUDA_VISIBLE_DEVICES" : "2",
     "check_validation" : false,
     "wandb_log": true,
-    "wandb_project": "test1",
+    "wandb_project": "icdcs23-poster",
     "wandb_run_name" : "GPT2_large_11_diffcl_changed",
     "mode" : "finetune",
     "checkpoint_path" : "outputs/11/GPT2_diffcl"

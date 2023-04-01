@@ -14,7 +14,7 @@
     "CUDA_VISIBLE_DEVICES" : "2",
     "check_validation" : false,
     "wandb_log": true,
-    "wandb_project": "test1",
+    "wandb_project": "icdcs23-poster",
     "wandb_run_name" : "GPT2_large_09_diff_changed",
     "mode" : "finetune",
     "checkpoint_path" : "outputs/09/GPT2_diff"
