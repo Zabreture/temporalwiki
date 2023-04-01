@@ -17,7 +17,7 @@
     "fp16" : true,
     "CUDA_VISIBLE_DEVICES" : "0,1,2,3,4,5,6,7",
     "wandb_log": true,
-    "wandb_project": "ever_changing",
+    "wandb_project": "icdcs23-poster",
     "wandb_run_name" : "GPT2_large_12_1e-4_diffcl_v3",
     "mode" : "pretrain",
     "use_lr_scheduling" : true,
