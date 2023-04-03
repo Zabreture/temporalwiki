@@ -4,7 +4,7 @@
     "dataset" : "wikipedia_09_gpt2",
     "dataset_version" : "full",
     "train_batch_size" : 4,
-    "model" : "~/archive/GPT-2/pytorch_model.bin",
+    "model" : "~/archive/GPT-2",
     "method": "baseline",
     "ngpu" : 1,
     "num_workers" : 40,

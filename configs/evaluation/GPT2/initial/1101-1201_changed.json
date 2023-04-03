@@ -4,7 +4,7 @@
     "dataset" : "1101-1201_changed",
     "dataset_version" : "full",
     "train_batch_size" : 32,
-    "model" : "~/archive/GPT-2/pytorch_model.bin",
+    "model" : "~/archive/GPT-2",
     "method": "baseline",
     "ngpu" : 1,
     "num_workers" : 40,

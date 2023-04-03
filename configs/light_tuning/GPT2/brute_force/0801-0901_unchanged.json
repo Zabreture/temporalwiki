@@ -6,7 +6,7 @@
     "dataset_version" : "full",
     "train_batch_size" : 32,
     "learning_rate" : 1e-5,
-    "model" : "~/archive/GPT-2/pytorch_model.bin",
+    "model" : "~/archive/GPT-2",
     "method": "baseline",
     "gradient_accumulation_steps" : 1,
     "ngpu" : 1,
