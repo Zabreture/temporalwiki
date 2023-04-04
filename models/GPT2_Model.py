@@ -1,4 +1,4 @@
-import lightning.pytorch as pl
+import pytorch_lightning as pl
 
 from transformers import (
     Adafactor,
@@ -14,7 +14,7 @@ from collections import Counter
 
 import re
 import string
-from fix.lr_schedules  import WarmupDecayLR
+from deepspeed.runtime.lr_schedules import WarmupDecayLR
 import os
 
 from models.RecAdam import RecAdam

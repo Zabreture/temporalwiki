@@ -15,7 +15,7 @@
     "ngpu" : 8,
     "num_workers" : 40,
     "resume_from_checkpoint" : null,
-    "accelerator" : "deepspeed_stage_2",
+    "accelerator" : "deepspeed",
     "fp16" : true,
     "CUDA_VISIBLE_DEVICES" : "0,1,2,3,4,5,6,7",
     "wandb_log": true,

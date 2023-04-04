@@ -8,14 +8,16 @@ import numpy as np
 # import wandb
 
 from models import load_model
-import lightning.pytorch as pl
+import pytorch_lightning as pl
 from evaluation import evaluate
 from argparse import ArgumentParser
 from evaluation_ppl import evaluate_ppl
 # from lightning.pytorch.loggers.wandb import WandbLogger
 # from transformers import T5Tokenizer, GPT2Tokenizer
-from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
+from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
+import warnings
 
+warnings.filterwarnings("ignore")
 
 def set_seed(seed):
     random.seed(seed)
@@ -26,6 +28,8 @@ def set_seed(seed):
 
 
 if __name__ == '__main__':
+    # import warnings
+    # warnings.filterwarnings("ignore")
     parser = ArgumentParser()
     parser.add_argument('--config', default=None, type=str)
     arg_ = parser.parse_args()
@@ -116,7 +120,7 @@ if __name__ == '__main__':
         seed=42,
         check_validation_only=hparam.check_validation,
         checkpoint_path=hparam.checkpoint_path,
-        accelerator=hparam.accelerator,
+        # accelerator="gpu",
         output_log=hparam.output_log,
     )
     args = argparse.Namespace(**args_dict)
@@ -141,18 +145,18 @@ if __name__ == '__main__':
     # https://pytorch-lightning.readthedocs.io/en/stable/common/trainer.html#trainer-flags
     train_params = dict(
         accumulate_grad_batches=args.gradient_accumulation_steps,
-        num_nodes=args.n_gpu,
+	gpus = args.n_gpu,
         max_epochs=int(args.num_train_epochs * args.num_files),
         precision=16 if args.fp16 else 32,
-        # amp_backend = "native",
-        # resume_from_checkpoint = args.resume_from_checkpoint,
+        amp_backend = "native",
+        resume_from_checkpoint = args.resume_from_checkpoint,
         gradient_clip_val=args.max_grad_norm,
         enable_checkpointing=checkpoint_callback,
         # check_val_every_n_epoch = saving_epoch,
         val_check_interval=args.val_check_interval,
-        logger=wandb_logger,
         callbacks=callbacks,
-        strategy=args.accelerator
+        strategy="deepspeed_stage_2",
+	# accelerator="gpu"
     )
     if 't5' in args.model_name_or_path:
         Model = load_model('T5')
@@ -174,4 +178,4 @@ if __name__ == '__main__':
             model = Model(args)
         # print(**train_params)
         trainer = pl.Trainer(**train_params)
-        trainer.fit(model, ckpt_path=args.resume_from_checkpoint)
+        trainer.fit(model)

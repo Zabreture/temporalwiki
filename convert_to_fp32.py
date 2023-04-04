@@ -1,10 +1,10 @@
-from lightning.pytorch.utilities.deepspeed import convert_zero_checkpoint_to_fp32_state_dict
+from pytorch_lightning.utilities.deepspeed import convert_zero_checkpoint_to_fp32_state_dict
 import os
 # lightning deepspeed has saved a directory instead of a file
 
 ##### Please modify this part #####
-checkpoint_dir = 'outputs/GPT2_large_12_1e-4_diff_lora'
-output_path = 'outputs/GPT2_large_12_1e-4_diff_lora_/'
+checkpoint_dir = '/data/home/scv8025/run/temporalwiki-main/outputs/GPT2_large_12_1e-4_diff_lora'
+output_path = '/data/home/scv8025/run/temporalwiki-main/outputs/GPT2_large_12_1e-4_diff_lora_/'
 
 if not os.path.isdir(output_path):
     os.mkdir(output_path)

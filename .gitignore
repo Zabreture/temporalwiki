@@ -8,4 +8,7 @@ model_checkpoints
 log
 ckl_data
 *.sh
-torch-1.9.0+cu111-cp39-cp39-win_amd64.whl
+gpt2
+venv
+logs
+*.out
