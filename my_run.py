@@ -12,7 +12,7 @@ import lightning.pytorch as pl
 from evaluation import evaluate
 from argparse import ArgumentParser
 from evaluation_ppl import evaluate_ppl
-from lightning.pytorch.loggers.wandb import WandbLogger
+# from lightning.pytorch.loggers.wandb import WandbLogger
 # from transformers import T5Tokenizer, GPT2Tokenizer
 from lightning.pytorch.callbacks.model_checkpoint import ModelCheckpoint
 
@@ -76,11 +76,11 @@ if __name__ == '__main__':
         hparam.fp16 = False
 
     # Logging into WANDB if needed
-    if hparam.wandb_log:
-        wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name)
+    # if hparam.wandb_log:
+        # wandb_logger = WandbLogger(project=hparam.wandb_project, name=hparam.wandb_run_name)
         # wandb_logger = None
-    else:
-        wandb_logger = None
+    # else:
+    wandb_logger = None
 
     # Setting configurations
     args_dict = dict(
