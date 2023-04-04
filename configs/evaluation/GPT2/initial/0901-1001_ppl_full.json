@@ -4,7 +4,7 @@
     "dataset" : "wikipedia_10_gpt2",
     "dataset_version" : "full",
     "train_batch_size" : 4,
-    "model" : "/data/home/scv8025/run/temporalwiki-main.gpt2",
+    "model" : "/data/home/scv8025/run/temporalwiki-main/gpt2",
     "method": "baseline",
     "ngpu" : 1,
     "num_workers" : 40,
