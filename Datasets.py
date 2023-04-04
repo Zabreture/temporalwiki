@@ -20,80 +20,80 @@ class CustomDataset(Dataset):
         if self.type_path == 'train':
             if self.args.mode == 'finetune':
                 if 'unchanged' in self.args.dataset:
-                    self.dataset = pd.read_csv('data/evaluation/lighttuning/lighttuning_unchanged_500.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/evaluation/lighttuning/lighttuning_unchanged_500.csv')
                 else:
-                    self.dataset = pd.read_csv('data/evaluation/lighttuning/lighttuning_changed_500.csv')
-                # self.dataset = pd.read_csv('data/TWiki_Probes/lighttuning/'+self.args.dataset+'.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/evaluation/lighttuning/lighttuning_changed_500.csv')
+                # self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/lighttuning/'+self.args.dataset+'.csv')
             elif self.args.dataset == 'wikipedia_0809':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_0809_subset.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_0809_subset.csv')
             elif self.args.dataset == 'wikipedia_0809_gpt2':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_0809_gpt2.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_0809_gpt2.csv')
             elif self.args.dataset == 'wikipedia_0910':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_0910_subset.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_0910_subset.csv')
             elif self.args.dataset == 'wikipedia_0910_gpt2':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_0910_gpt2.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_0910_gpt2.csv')
             elif self.args.dataset == 'wikipedia_1011':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_1011_subset.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_1011_subset.csv')
             elif self.args.dataset == 'wikipedia_1011_gpt2':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_1011_gpt2.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_1011_gpt2.csv')
             elif self.args.dataset == 'wikipedia_1112_gpt2':
-                self.dataset = pd.read_csv('data/TWiki_Diffsets/wikipedia_1112_gpt2.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Diffsets/wikipedia_1112_gpt2.csv')
             else:
                 raise Exception('The given dataset does not exist in data directory.')
         elif type_path == 'pretrain':
             total_line = 4378268
             skip = sorted(random.sample(range(1, total_line + 1), total_line - length))
-            self.dataset = pd.read_csv('data/Wikipedia_Full/wikipedia_08_gpt2/part1.csv', usecols=['text'],
+            self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/Wikipedia_Full/wikipedia_08_gpt2/part1.csv', usecols=['text'],
                                        skiprows=skip)
         else:
             # evaluation dataset
             if self.args.check_validation_only:
                 if self.args.mode == 'evaluate_ppl_corpus':
-                    self.dataset = pd.read_csv('data/perplexity/' + self.args.dataset + '.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/perplexity/' + self.args.dataset + '.csv')
                 else:
                     if self.args.dataset == 'IL':
-                        self.dataset = pd.read_csv('data/IL.csv')
+                        self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/IL.csv')
                     else:
-                        self.dataset = pd.read_csv('data/twiki_probes/' + self.args.dataset + '.csv')
+                        self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/' + self.args.dataset + '.csv')
             # validation dataset
             elif self.args.mode == 'finetune':
-                self.dataset = pd.read_csv('data/evaluation/final/' + self.args.dataset + '.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/evaluation/final/' + self.args.dataset + '.csv')
             elif self.args.dataset == 'IL':
-                self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
             elif self.args.dataset == 'data/wikipedia_09' or self.args.dataset == 'wikipedia_0809' or \
                     self.args.dataset == 'data/wikipedia_09_gpt2' or self.args.dataset == 'wikipedia_0809_gpt2':
                 if self.lama_type == 'unchanged':
-                    self.dataset = pd.read_csv('data/twiki_probes/0801-0901_unchanged.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/0801-0901_unchanged.csv')
                 elif self.lama_type == 'changed':
-                    self.dataset = pd.read_csv('data/twiki_probes/0801-0901_changed.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/0801-0901_changed.csv')
                 else:
-                    self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
             elif self.args.dataset == 'data/wikipedia_10_gpt2' or self.args.dataset == 'data/wikipedia_10' or \
                     self.args.dataset == 'wikipedia_0910' or self.args.dataset == 'wikipedia_0910_gpt2':
                 if self.lama_type == 'unchanged':
-                    self.dataset = pd.read_csv('data/twiki_probes/0901-1001_unchanged.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/0901-1001_unchanged.csv')
                 elif self.lama_type == 'changed':
-                    self.dataset = pd.read_csv('data/twiki_probes/0901-1001_changed.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/0901-1001_changed.csv')
                 else:
-                    self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
             elif self.args.dataset == 'data/wikipedia_11_gpt2' or self.args.dataset == 'data/wikipedia_11' or \
                     self.args.dataset == 'wikipedia_1011' or self.args.dataset == 'wikipedia_1011_gpt2':
                 if self.lama_type == 'unchanged':
-                    self.dataset = pd.read_csv('data/twiki_probes/1001-1101_unchanged.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/1001-1101_unchanged.csv')
                 elif self.lama_type == 'changed':
-                    self.dataset = pd.read_csv('data/twiki_probes/1001-1101_changed.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/1001-1101_changed.csv')
                 else:
-                    self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
             elif self.args.dataset == 'data/wikipedia_12_gpt2' or self.args.dataset == 'data/wikipedia_12' or \
                     self.args.dataset == 'wikipedia_1112' or self.args.dataset == 'wikipedia_1112_gpt2':
                 if self.lama_type == 'unchanged':
-                    self.dataset = pd.read_csv('data/twiki_probes/1101-1201_unchanged.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/1101-1201_unchanged.csv')
                 elif self.lama_type == 'changed':
-                    self.dataset = pd.read_csv('data/twiki_probes/1101-1201_changed.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/twiki_probes/1101-1201_changed.csv')
                 else:
-                    self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                    self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
             else:
-                self.dataset = pd.read_csv('data/TWiki_Probes/IL.csv')
+                self.dataset = pd.read_csv('/data/home/scv8025/run/temporalwiki-main/data/TWiki_Probes/IL.csv')
 
         print(f'Length of dataset retrieving is.. {len(self.dataset)}')
         self.input_length = input_length
